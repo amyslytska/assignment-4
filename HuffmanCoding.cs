@@ -24,9 +24,8 @@ public class HuffmanCoding
 
         return frequencyDict;
     }
-    // 2) Sort the characters in increasing order of the frequency. Using priority queue
-    // or MIN HEAP.
-    
+    // 2) Sort the characters in increasing order of the frequency using MIN HEAP.
+
     // 3) Make each unique character as a leaf node.
     // Create an empty node z. Assign the minimum frequency to the left child of
     // z and assign the second minimum frequency to the right child of z.
