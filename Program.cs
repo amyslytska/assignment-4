@@ -1,3 +1,23 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿namespace assignment4;
+using System;
 
-Console.WriteLine("Hello, World!");
+internal class Program
+{
+    public static void Main(string[] args)
+    {
+        var inputText = File.ReadAllLines("C:/Users/annmy/RiderProjects/assignment-4/sherlock.txt");
+        var frequency = HuffmanCoding.CalculateFrequency(inputText);
+        Console.Write("Enter a symbol: ");
+        char symbol = Console.ReadLine()[0];
+        if (frequency.ContainsKey(symbol))
+        {
+            Console.WriteLine("The frequency of '{0}' is {1}", symbol, frequency[symbol]);
+        }
+        else
+        {
+            Console.WriteLine("'{0}' is not found", symbol);
+        }
+    }
+}
+
+
