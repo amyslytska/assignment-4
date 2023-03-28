@@ -7,7 +7,7 @@ internal class Program
     {
         var inputText = File.ReadAllLines("C:/Users/annmy/RiderProjects/assignment-4/sherlock.txt");
         var frequency = HuffmanCoding.CalculateFrequency(inputText);
-        Console.Write("Enter a symbol: ");
+        /*Console.Write("Enter a symbol: ");
         char symbol = Console.ReadLine()[0];
         if (frequency.ContainsKey(symbol))
         {
@@ -16,6 +16,13 @@ internal class Program
         else
         {
             Console.WriteLine("'{0}' is not found", symbol);
+        }*/
+
+        var minHeap = HuffmanCoding.MinHeap(frequency);
+
+        foreach (var node in minHeap)
+        {
+            Console.WriteLine($"{node.Symbol} - {node.Frequency}");
         }
     }
 }
