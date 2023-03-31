@@ -1,6 +1,6 @@
 ﻿namespace assignment4;
 
-public static class HuffmanCoding
+public class HuffmanCoding
 {
     // 1) Calculate the frequency of each character in the string (dictionary).
     public static Dictionary<char, int> CalculateFrequency(string[] inputText)
@@ -39,6 +39,7 @@ public static class HuffmanCoding
 
         return minHeap;
     }
+    
     private static void Heapify(List<Node> heap, int index)
     {
         var smallest = index;
@@ -65,7 +66,28 @@ public static class HuffmanCoding
             Heapify(heap, smallest);
         }
     }
+
+    public Node GetMinimum (List<Node> heap)
+    {
+        var smallest =  heap[0];
+        var i = heap[0].LeftChild.Frequency;
+        heap.Remove(smallest);
+        Heapify(heap, i);
+        return smallest;
+    }
+    
     // 3) Make each unique character as a leaf node.
+    //public static List<Node> HuffmanTree (List<Node> heap, Dictionary<char, int> frequencyDict)
+    //{
+     //   var tree = List<Node>;
+     //   while (!heap.IsEmpty())
+     // {
+     //   var z = Node(GetMinimum(head).Symbol + GetMinimum(head).RightChild Symbol, heap[0].Frequency + heap[1].Frequency);
+     //   tree.Add(z);
+     //   return tree;
+    //}
+
+
     // Create an empty node z. Assign the minimum frequency to the left child of
     // z and assign the second minimum frequency to the right child of z.
     // Set the value of the z as the sum of the above two minimum frequencies.
