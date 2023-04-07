@@ -18,7 +18,6 @@ internal class Program
         }*/
 
         var minHeap = HuffmanCoding.MinHeap(frequency);
-
         foreach (var node in minHeap)
         {
             if (node.Symbol == 0x0A)
@@ -30,6 +29,17 @@ internal class Program
                 Console.WriteLine($"{node.Symbol} - {node.Frequency}");
             }
         }
+
+        // coding by our dict
+        var name = @"C:/Users/KHRYSTYNA/RiderProjects/assignment-4/coded_text.txt";
+        var codedText = File.Create(name);
+        HuffmanCoding.CodeText(inputText, codedText, HuffmanCoding.HuffmanTreeDecode(minHeap));
+        
+        // decoding coded
+
+        var decodingFile = File.ReadAllText(name);
+        HuffmanCoding.Decode(decodingFile);
+
     }
 }
 

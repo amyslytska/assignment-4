@@ -1,4 +1,6 @@
-﻿namespace assignment_4;
+﻿using System.Xml.Schema;
+
+namespace assignment_4;
 
 public class HuffmanCoding
 {
@@ -63,34 +65,71 @@ public class HuffmanCoding
         }
     }
 
-    public Node GetMinimum (List<Node> heap)
+    public static Node GetMinimum (List<Node> heap)
     {
         var smallest =  heap[0];
-        var i = heap[0].LeftChild.Frequency;
         heap.Remove(smallest);
-        Heapify(heap, i);
+        Heapify(heap, heap.Count);
         return smallest;
     }
     
     // 3) Make each unique character as a leaf node.
-    //public static List<Node> HuffmanTree (List<Node> heap, Dictionary<char, int> frequencyDict)
-    //{
-     //   var tree = List<Node>;
-     //   while (!heap.IsEmpty())
-     // {
-     //   var z = Node(GetMinimum(head).Symbol + GetMinimum(head).RightChild Symbol, heap[0].Frequency + heap[1].Frequency);
-     //   tree.Add(z);
-     //   return tree;
-    //}
+    public static List<Node> HuffmanTree(List<Node> heap)
+    {
+        var tree = new List<Node>(heap);
+        while (tree.Count > 1)
+        {
+            var min1 = GetMinimum(tree);
+            var min2 = GetMinimum(tree);
+            // created leafnodes
+            var z = new Node( min1.Frequency + min2.Frequency, min1, min2);
+            tree.Add(z);
+            Heapify(tree, tree.Count);
+        }
+        return tree;
+    }
+    // 
 
+    public static Dictionary<char, int> HuffmanTreeDecode(List<Node> heap)
+    {
+        var codingDict = new Dictionary<char, int>();
+        var root = HuffmanTree(heap)[0];
+        foreach (var node in heap)
+        {
+            var code = 1;
+            //traverse code with path
+            codingDict[node.Symbol] = code;
+        }
 
-    // Create an empty node z. Assign the minimum frequency to the left child of
-    // z and assign the second minimum frequency to the right child of z.
-    // Set the value of the z as the sum of the above two minimum frequencies.
-    
-    // 4) Remove these two minimum frequencies from Q and add the sum into the list of frequencies.
-    // 5) Insert node z into the tree.
-    // 6) Repeat steps 3 to 5 for all the characters.
-    // 7) For each non-leaf node, assign 0 to the left edge and 1 to the right edge.
+        return codingDict;
+    }
 
+    public static void CodeText(string inputText, FileStream file, Dictionary<char, int> decodeDict)
+    {
+        var Dict = inputText;
+        foreach (var letter in inputText)
+        {
+            // add the decode table with ; between symbols and some symbol when it ends
+            // codedText.WriteLine($"{node.Symbol} - {node.Frequency}");
+            var code = decodeDict[letter];
+            //    codedText.Write(code); - some problem, idk why
+        }
+    }
+
+    public static void Decode(string codedText)
+    {
+        var decodedText = "";
+        // get the dict
+        var pressedDict = codedText.Split("@")[0].Split(";");
+        var codingDict = new Dictionary<char, int>();
+        foreach (var i in pressedDict)
+        {
+            i.Split(":");
+            codingDict[i[0]] = i[1];
+        }
+        
+        // go through the tho file and collect the codes up to the next 0
+        
+        Console.Write(decodedText);
+    }
 }
