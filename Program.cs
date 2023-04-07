@@ -4,7 +4,7 @@ internal class Program
 {
     public static void Main(string[] args)
     {
-        var inputText = File.ReadAllText("C:/Users/KHRYSTYNA/RiderProjects/assignment-4/sherlock.txt");
+        var inputText = File.ReadAllText("C:/Users/KHRYSTYNA/RiderProjects/assignment-4/test.txt");
         var frequency = HuffmanCoding.CalculateFrequency(inputText);
         /*Console.Write("Enter a symbol: ");
         char symbol = Console.ReadLine()[0];
@@ -21,7 +21,14 @@ internal class Program
 
         foreach (var node in minHeap)
         {
-            Console.WriteLine($"{node.Symbol} - {node.Frequency}");
+            if (node.Symbol == 0x0A)
+            { 
+                Console.WriteLine($"\\n - {node.Frequency}");
+            }
+            else
+            {
+                Console.WriteLine($"{node.Symbol} - {node.Frequency}");
+            }
         }
     }
 }
