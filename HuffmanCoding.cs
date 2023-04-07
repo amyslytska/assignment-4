@@ -104,15 +104,20 @@ public class HuffmanCoding
         return codingDict;
     }
 
-    public static void CodeText(string inputText, FileStream file, Dictionary<char, int> decodeDict)
+    public static void CodeText(string inputText, string fileName, Dictionary<char, int> decodeDict)
     {
-        var Dict = inputText;
+        // add the decode table with ; between symbols and some symbol when it ends
+        foreach (var code in decodeDict)
+        {
+            File.AppendAllTextAsync(fileName,$"{code.Key} : {code.Value}");
+        }
+
+        File.AppendAllTextAsync(fileName, "@");
+        
         foreach (var letter in inputText)
         {
-            // add the decode table with ; between symbols and some symbol when it ends
-            // codedText.WriteLine($"{node.Symbol} - {node.Frequency}");
-            var code = decodeDict[letter];
-            //    codedText.Write(code); - some problem, idk why
+            var code = decodeDict[letter].ToString();
+            File.AppendAllTextAsync(fileName, code); // there should be a way to write it with bytes
         }
     }
 

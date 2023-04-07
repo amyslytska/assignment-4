@@ -32,8 +32,8 @@ internal class Program
 
         // coding by our dict
         var name = @"C:/Users/KHRYSTYNA/RiderProjects/assignment-4/coded_text.txt";
-        var codedText = File.Create(name);
-        HuffmanCoding.CodeText(inputText, codedText, HuffmanCoding.HuffmanTreeDecode(minHeap));
+        // var codedText = File.Create(name);
+        HuffmanCoding.CodeText(inputText, name, HuffmanCoding.HuffmanTreeDecode(minHeap));
         
         // decoding coded
 
