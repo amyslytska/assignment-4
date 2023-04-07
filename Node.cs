@@ -1,4 +1,4 @@
-﻿namespace assignment4;
+﻿namespace assignment_4;
 
 public class Node : IComparable<Node>
 {

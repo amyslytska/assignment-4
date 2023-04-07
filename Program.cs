@@ -1,11 +1,10 @@
-﻿namespace assignment4;
-using System;
+﻿namespace assignment_4;
 
 internal class Program
 {
     public static void Main(string[] args)
     {
-        var inputText = File.ReadAllLines("C:/Users/KHRYSTYNA/RiderProjects/assignment-4/sherlock.txt");
+        var inputText = File.ReadAllText("C:/Users/KHRYSTYNA/RiderProjects/assignment-4/sherlock.txt");
         var frequency = HuffmanCoding.CalculateFrequency(inputText);
         /*Console.Write("Enter a symbol: ");
         char symbol = Console.ReadLine()[0];

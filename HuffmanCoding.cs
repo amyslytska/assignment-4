@@ -1,25 +1,21 @@
-﻿namespace assignment4;
+﻿namespace assignment_4;
 
 public class HuffmanCoding
 {
     // 1) Calculate the frequency of each character in the string (dictionary).
-    public static Dictionary<char, int> CalculateFrequency(string[] inputText)
+    public static Dictionary<char, int> CalculateFrequency(string inputText)
     {
         var frequencyDict = new Dictionary<char, int>();
-        foreach (var line in inputText)
+        foreach (var c in inputText)
         {
-            foreach(char c in line)
-            {
-                if(frequencyDict.ContainsKey(c))
-                {
-                    frequencyDict[c]++;
-                }
-                else
-                {
-                    frequencyDict[c] = 1;
-                }
+            if(frequencyDict.ContainsKey(c))
+            { 
+                frequencyDict[c]++;
             }
-        
+            else 
+            { 
+                frequencyDict[c] = 1;
+            }
         }
 
         return frequencyDict;
