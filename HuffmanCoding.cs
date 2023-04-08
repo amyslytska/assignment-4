@@ -97,6 +97,7 @@ public class HuffmanCoding
         foreach (var node in heap)
         {
             var symbol = node.Symbol;
+            // maybe we can deal with it for 
             var code = int.Parse(string.Join(",", root.Search(symbol, new List<int>())).Replace(",", ""));
             codingDict[symbol] = code;
         }
