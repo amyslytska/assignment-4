@@ -96,11 +96,10 @@ public class HuffmanCoding
         var root = HuffmanTree(heap)[0];
         foreach (var node in heap)
         {
-            var code = 1;
-            //traverse code with path
-            codingDict[node.Symbol] = code;
+            var symbol = node.Symbol;
+            var code = int.Parse(string.Join(",", root.Search(symbol, new List<int>())).Replace(",", ""));
+            codingDict[symbol] = code;
         }
-
         return codingDict;
     }
 
