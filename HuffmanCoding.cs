@@ -1,6 +1,4 @@
-﻿using System.Xml.Schema;
-
-namespace assignment_4;
+﻿namespace assignment_4;
 
 public class HuffmanCoding
 {
@@ -73,8 +71,7 @@ public class HuffmanCoding
         return smallest;
     }
     
-    // 3) Make each unique character as a leaf node.
-    public static List<Node> HuffmanTree(List<Node> heap)
+   public static List<Node> HuffmanTree(List<Node> heap)
     {
         var tree = new List<Node>(heap);
         while (tree.Count > 1)
@@ -97,44 +94,57 @@ public class HuffmanCoding
         foreach (var node in heap)
         {
             var symbol = node.Symbol;
-            // maybe we can deal with it for 
-            var code = int.Parse(string.Join(",", root.Search(symbol, new List<int>())).Replace(",", ""));
+            var code = int.Parse(string.Join("", root.Search(symbol, new List<int>())));
             codingDict[symbol] = code;
         }
         return codingDict;
     }
 
+
     public static void CodeText(string inputText, string fileName, Dictionary<char, int> decodeDict)
     {
-        // add the decode table with ; between symbols and some symbol when it ends
         foreach (var code in decodeDict)
         {
-            File.AppendAllTextAsync(fileName,$"{code.Key} : {code.Value}");
+            File.AppendAllText(fileName, $"{code.Key}:{code.Value}#");
         }
 
-        File.AppendAllTextAsync(fileName, "@");
-        
+        File.AppendAllText(fileName, "@");
+
         foreach (var letter in inputText)
         {
             var code = decodeDict[letter].ToString();
-            File.AppendAllTextAsync(fileName, code); // there should be a way to write it with bytes
+            File.AppendAllText(fileName, code); // there should be a way to write it with bytes
         }
     }
+
 
     public static void Decode(string codedText)
     {
         var decodedText = "";
-        // get the dict
-        var pressedDict = codedText.Split("@")[0].Split(";");
+        var pressedDict = codedText.Split("@")[0].Split("#");
         var codingDict = new Dictionary<char, int>();
-        foreach (var i in pressedDict)
+        var codedString = codedText.Split("@")[1];
+        
+        foreach (var item in pressedDict)
         {
-            i.Split(":");
-            codingDict[i[0]] = i[1];
+            if (!string.IsNullOrEmpty(item))
+            {
+                var keyValue = item.Split(":");
+                codingDict[keyValue[0][0]] = int.Parse(keyValue[1]);
+            }
         }
         
-        // go through the tho file and collect the codes up to the next 0
-        
+        var currentCode = "";
+        foreach (var digit in codedString)
+        {
+            currentCode += digit;
+            if (codingDict.ContainsValue(int.Parse(currentCode)))
+            {
+                decodedText += codingDict.FirstOrDefault(x => x.Value == int.Parse(currentCode)).Key;
+                currentCode = "";
+            }
+        }
+
         Console.Write(decodedText);
     }
 }
