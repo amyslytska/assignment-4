@@ -67,21 +67,35 @@ public class HuffmanCoding
     {
         var smallest =  heap[0];
         heap.Remove(smallest);
-        Heapify(heap, heap.Count);
+        Heapify(heap, 0);
         return smallest;
     }
-    
+
+    public static void HeapifyBottomTop (List<Node> heap, int index)
+    {
+        var parent = index / 2;
+        if (index <= 1) {
+            return;
+        }  
+        if (heap[index].Frequency < heap[parent].Frequency) 
+        {  
+            (heap[index], heap[parent]) = (heap[parent], heap[index]);
+        }
+
+        HeapifyBottomTop(heap, parent);
+    }
+
    public static List<Node> HuffmanTree(List<Node> heap)
     {
         var tree = new List<Node>(heap);
-        while (tree.Count > 1)
+        while (tree.Count != 1)
         {
             var min1 = GetMinimum(tree);
             var min2 = GetMinimum(tree);
             // created leafnodes
             var z = new Node( min1.Frequency + min2.Frequency, min1, min2);
-            tree.Add(z);
-            Heapify(tree, tree.Count);
+            tree.Add(z); // here we need not just to add but to insert and go through all of it
+            HeapifyBottomTop(tree, tree.Count - 1);
         }
         return tree;
     }
@@ -105,7 +119,7 @@ public class HuffmanCoding
     {
         foreach (var code in decodeDict)
         {
-            File.AppendAllText(fileName, $"{code.Key}:{code.Value}#");
+            File.AppendAllText(fileName, $"{code.Key}-{code.Value}#");
         }
 
         File.AppendAllText(fileName, "@");
@@ -129,7 +143,7 @@ public class HuffmanCoding
         {
             if (!string.IsNullOrEmpty(item))
             {
-                var keyValue = item.Split(":");
+                var keyValue = item.Split("-");
                 codingDict[keyValue[0][0]] = int.Parse(keyValue[1]);
             }
         }
