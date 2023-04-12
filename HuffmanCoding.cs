@@ -1,8 +1,9 @@
-﻿namespace assignment_4;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace assignment_4;
 
 public class HuffmanCoding
 {
-    // 1) Calculate the frequency of each character in the string (dictionary).
     public static Dictionary<char, int> CalculateFrequency(string inputText)
     {
         var frequencyDict = new Dictionary<char, int>();
@@ -20,7 +21,6 @@ public class HuffmanCoding
 
         return frequencyDict;
     }
-    // 2) Sort the characters in increasing order of the frequency using min heap.
     public static List<Node> MinHeap(Dictionary<char, int> frequencyDict)
     {
         var minHeap = frequencyDict.Select(item => new Node(item.Key, item.Value)).ToList();
@@ -39,7 +39,7 @@ public class HuffmanCoding
     private static void Heapify(List<Node> heap, int index)
     {
         var smallest = index;
-        var left = 2 * index + 1; // index of left/right children
+        var left = 2 * index + 1; 
         var right = 2 * index + 2;
         
         //check if the l/r child of the current node exists and if it has a smaller frequency than the current
@@ -62,103 +62,83 @@ public class HuffmanCoding
             Heapify(heap, smallest);
         }
     }
-
-    public static Node GetMinimum (List<Node> heap)
+    public static Dictionary<char, string> HuffmanTree(string inputText)
     {
-        var smallest =  heap[0];
-        heap.Remove(smallest);
-        Heapify(heap, 0);
-        return smallest;
-    }
+        var frequencyDict = CalculateFrequency(inputText);
+        var minHeap = MinHeap(frequencyDict);
 
-    public static void HeapifyBottomTop (List<Node> heap, int index)
-    {
-        var parent = index / 2;
-        if (index <= 1) {
-            return;
-        }  
-        if (heap[index].Frequency < heap[parent].Frequency) 
-        {  
-            (heap[index], heap[parent]) = (heap[parent], heap[index]);
-        }
-
-        HeapifyBottomTop(heap, parent);
-    }
-
-   public static List<Node> HuffmanTree(List<Node> heap)
-    {
-        var tree = new List<Node>(heap);
-        while (tree.Count != 1)
+        // build the Huffman tree
+        while (minHeap.Count > 1)
         {
-            var min1 = GetMinimum(tree);
-            var min2 = GetMinimum(tree);
-            // created leafnodes
-            var z = new Node( min1.Frequency + min2.Frequency, min1, min2);
-            tree.Add(z); // here we need not just to add but to insert and go through all of it
-            HeapifyBottomTop(tree, tree.Count - 1);
+            var leftChild = minHeap[0];
+            minHeap.RemoveAt(0);
+            var rightChild = minHeap[0];
+            minHeap.RemoveAt(0);
+            var internalNode = new Node(leftChild.Frequency + rightChild.Frequency, leftChild, rightChild);
+            minHeap.Add(internalNode);
+            Heapify(minHeap, minHeap.Count - 1);
         }
-        return tree;
-    }
-    // 
 
-    public static Dictionary<char, int> HuffmanTreeDecode(List<Node> heap)
+        var root = minHeap[0];
+        var encodingDict = new Dictionary<char, string>();
+        Traverse(root, "", encodingDict);
+        return encodingDict;
+    }
+
+    private static void Traverse(Node node, string code, Dictionary<char, string> encodingDict)
     {
-        var codingDict = new Dictionary<char, int>();
-        var root = HuffmanTree(heap)[0];
-        foreach (var node in heap)
+        if (node.Symbol != default(char))
         {
-            var symbol = node.Symbol;
-            var code = int.Parse(string.Join("", root.Search(symbol, new List<int>())));
-            codingDict[symbol] = code;
+            encodingDict[node.Symbol] = code;
         }
-        return codingDict;
+        else
+        {
+            Traverse(node.LeftChild, code + "0", encodingDict);
+            Traverse(node.RightChild, code + "1", encodingDict);
+        }
     }
 
-
-    public static void CodeText(string inputText, string fileName, Dictionary<char, int> decodeDict)
+    public static void CodeText(string inputText, string fileName, Dictionary<char, string> decodeDict)
     {
         foreach (var code in decodeDict)
         {
-            File.AppendAllText(fileName, $"{code.Key}-{code.Value}#");
+            File.AppendAllText(fileName, $"{code.Key}%{code.Value}#");
         }
 
         File.AppendAllText(fileName, "@");
 
         foreach (var letter in inputText)
         {
-            var code = decodeDict[letter].ToString();
+            var code = decodeDict[letter];
             File.AppendAllText(fileName, code); // there should be a way to write it with bytes
         }
     }
-
-
-    public static void Decode(string codedText)
+    public static void Decode(string file)
     {
-        var decodedText = "";
-        var pressedDict = codedText.Split("@")[0].Split("#");
-        var codingDict = new Dictionary<char, int>();
-        var codedString = codedText.Split("@")[1];
-        
-        foreach (var item in pressedDict)
+        string encodedText = File.ReadAllText(file);
+        var decodeDict = new Dictionary<string, char>();
+            
+        // Extracting the symbol-code pairs from the encoded text
+        string[] pairs = encodedText.Split('@')[0].Split('#', StringSplitOptions.RemoveEmptyEntries);
+        foreach (string pair in pairs)
         {
-            if (!string.IsNullOrEmpty(item))
-            {
-                var keyValue = item.Split("-");
-                codingDict[keyValue[0][0]] = int.Parse(keyValue[1]);
-            }
+            string[] symbolCode = pair.Split('%');
+            decodeDict[symbolCode[1]] = symbolCode[0][0];
         }
-        
-        var currentCode = "";
-        foreach (var digit in codedString)
+        // Decoding the coded text using the decodeDict
+        string codedText = encodedText.Substring(encodedText.IndexOf('@') + 1);
+        string decodedText = "";
+        string currentCode = "";
+        foreach (char c in codedText)
         {
-            currentCode += digit;
-            if (codingDict.ContainsValue(int.Parse(currentCode)))
+            currentCode += c;
+            if (decodeDict.ContainsKey(currentCode))
             {
-                decodedText += codingDict.FirstOrDefault(x => x.Value == int.Parse(currentCode)).Key;
+                decodedText += decodeDict[currentCode];
                 currentCode = "";
             }
         }
-
-        Console.Write(decodedText);
+            
+        Console.WriteLine(decodedText);
     }
 }
